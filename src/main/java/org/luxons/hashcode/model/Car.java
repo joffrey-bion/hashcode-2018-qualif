@@ -11,10 +11,13 @@ public class Car {
 
   private Position endPos = new Position(0, 0);
 
-  public void addRide(Ride ride) {
+  public void addRide(Ride ride, int nSteps) {
     rides.add(ride);
     endStep = earliestStartFor(ride) + ride.length();
     endPos = ride.getEnd();
+    if (endStep >= nSteps) {
+      throw new IllegalStateException("adding ride that will not finish in time");
+    }
   }
 
   public int earliestStartFor(Ride ride) {

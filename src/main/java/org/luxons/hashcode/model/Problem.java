@@ -69,17 +69,17 @@ public class Problem implements Solvable {
     while (!queue.isEmpty()) {
       Ride ride = queue.poll();
       Optional<Car> car = findBestCarFor(ride);
-      car.ifPresent(c -> c.addRide(ride));
+      car.ifPresent(c -> c.addRide(ride, nSteps));
     }
 
     return computeOutput();
   }
 
   private Optional<Car> findBestCarFor(Ride ride) {
-    Entry<Integer, List<Car>> carEntry = cars.stream() //
-            .collect(groupingBy(c -> c.earliestStartFor(ride), TreeMap::new, toList())) //
-            .firstEntry();
-    if (carEntry == null) {
+    TreeMap<Integer, List<Car>> carsByETA = cars.stream()
+            .collect(groupingBy(c -> c.earliestStartFor(ride), TreeMap::new, toList()));
+    Entry<Integer, List<Car>> carEntry = carsByETA.firstEntry();
+    if (carEntry == null || carEntry.getKey() + ride.length() >= nSteps) {
       return Optional.empty();
     }
     List<Car> equallyEarlyCars = carEntry.getValue();
