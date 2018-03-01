@@ -13,6 +13,7 @@ repositories {
 
 dependencies {
     compile 'org.hildan.hashcode:hashcode-utils:5.0.0'
+    compile 'ch.qos.logback:logback-classic:1.2.3'
     testCompile 'junit:junit:4.+'
 }
 
