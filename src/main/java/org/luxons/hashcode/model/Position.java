@@ -10,4 +10,8 @@ public class Position {
     this.row = row;
     this.col = col;
   }
+
+  public int distanceTo(Position other) {
+    return Math.abs(other.row - row) + Math.abs(other.col - col);
+  }
 }
