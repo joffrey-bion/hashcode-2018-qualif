@@ -2,6 +2,7 @@ package org.luxons.hashcode.model;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.PriorityQueue;
 
 import org.hildan.hashcode.utils.solver.Solvable;
 
@@ -34,8 +35,14 @@ public class Problem implements Solvable {
     this.rides = rides;
   }
 
+  private PriorityQueue<Ride> computeQueue() {
+    rides.forEach(r -> r.evaluate(nSteps, bonus));
+    return new PriorityQueue<>(rides);
+  }
+
   @Override
   public Iterable<? extends CharSequence> solve() {
+    PriorityQueue<Ride> queue = computeQueue();
 
     // TODO
 
