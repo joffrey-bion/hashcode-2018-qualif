@@ -81,7 +81,8 @@ public class Ride implements Comparable<Ride> {
 
   @Override
   public int compareTo(@NotNull Ride o) {
-    return (int) (importance - o.importance);
+    // biggest first in queues
+    return (int) (o.importance - importance);
   }
 
   @Override

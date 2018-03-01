@@ -14,4 +14,8 @@ public class Position {
   public int distanceTo(Position other) {
     return Math.abs(other.row - row) + Math.abs(other.col - col);
   }
+
+  public Position move(int deltaRows, int deltaCols) {
+    return new Position(row + deltaRows, col + deltaCols);
+  }
 }
