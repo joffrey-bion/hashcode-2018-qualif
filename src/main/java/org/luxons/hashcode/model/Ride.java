@@ -71,6 +71,9 @@ public class Ride implements Comparable<Ride> {
     long l = (nStepsTotal - latestFinish) * length();
     long b = (nStepsTotal - earliestStart) * bonus;
     importance = l + b;
+    if (importance < 0) {
+      throw new IllegalStateException("Negative importance for a ride");
+    }
   }
 
   public long getImportance() {
