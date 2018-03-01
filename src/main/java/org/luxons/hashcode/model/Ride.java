@@ -69,7 +69,7 @@ public class Ride implements Comparable<Ride> {
     return length;
   }
 
-  public void evaluate(int nStepsTotal, int bonus) {
+  public void setImportance(int nStepsTotal, int bonus) {
     long l = (nStepsTotal - latestFinish) * length();
     long b = (nStepsTotal - earliestStart) * bonus;
     importance = l + b;

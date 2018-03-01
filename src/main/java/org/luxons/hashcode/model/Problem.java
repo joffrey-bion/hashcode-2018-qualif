@@ -2,12 +2,18 @@ package org.luxons.hashcode.model;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Optional;
 import java.util.PriorityQueue;
+import java.util.TreeMap;
 import java.util.stream.Collectors;
 
 import org.hildan.hashcode.utils.solver.Solvable;
+
+import static java.util.stream.Collectors.groupingBy;
+import static java.util.stream.Collectors.toList;
 
 public class Problem implements Solvable {
 
@@ -50,7 +56,7 @@ public class Problem implements Solvable {
   }
 
   private PriorityQueue<Ride> computeQueue() {
-    rides.forEach(r -> r.evaluate(nSteps, bonus));
+    rides.forEach(r -> r.setImportance(nSteps, bonus));
     return new PriorityQueue<>(rides);
   }
 
@@ -61,29 +67,32 @@ public class Problem implements Solvable {
     while (!queue.isEmpty()) {
       Ride ride = queue.poll();
       Optional<Car> car = findBestCarFor(ride);
-      car.ifPresent(c -> c.rides.add(ride));
+      car.ifPresent(c -> c.addRide(ride));
     }
 
     return computeOutput();
   }
 
   private Optional<Car> findBestCarFor(Ride ride) {
-    return cars.stream().filter(this::isAvailable).findFirst();
-  }
-
-  private boolean isAvailable(Car car) {
-    return false;
+    Entry<Integer, List<Car>> carEntry = cars.stream() //
+            .collect(groupingBy(c -> c.earliestStartFor(ride), TreeMap::new, toList())) //
+            .firstEntry();
+    if (carEntry == null) {
+      return Optional.empty();
+    }
+    List<Car> equallyEarlyCars = carEntry.getValue();
+    return equallyEarlyCars.stream().max(Comparator.comparing(Car::getStepOfAvailability));
   }
 
   private List<String> computeOutput() {
-    return cars.stream().map(this::printCarRides).collect(Collectors.toList());
+    return cars.stream().map(this::printCarRides).collect(toList());
   }
 
   private String printCarRides(Car car) {
-    String rideIdsStr = car.rides.stream() //
+    String rideIdsStr = car.getRides().stream() //
             .map(Ride::getId) //
             .map(Object::toString) //
             .collect(Collectors.joining(" "));
-    return car.rides.size() + " " + rideIdsStr;
+    return car.getRides().size() + " " + rideIdsStr;
   }
 }
