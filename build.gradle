@@ -1,0 +1,44 @@
+apply plugin: 'java'
+apply plugin: 'idea'
+apply plugin: 'application'
+
+group = 'org.luxons.hashcode'
+version = '1.0.0'
+
+sourceCompatibility = 1.8
+
+repositories {
+    jcenter()
+}
+
+dependencies {
+    compile 'org.hildan.hashcode:hashcode-utils:5.0.0'
+    testCompile 'junit:junit:4.+'
+}
+
+mainClassName = 'org.luxons.hashcode.Main'
+
+task srcZip(type: Zip, dependsOn: tasks.build) {
+    classifier = 'src'
+    from sourceSets*.allSource
+    destinationDir file("$rootDir/outputs/")
+}
+
+task generateOutputs(type: JavaExec, dependsOn: tasks.build) {
+    args("inputs/*")
+    description = "Hashcode output generation"
+    main = project.mainClassName
+    classpath = sourceSets.main.runtimeClasspath
+}
+
+task startWebdriverManager(type: Exec) {
+    commandLine 'webdriver-manager.cmd', 'start'
+}
+
+task runProtractor(type: Exec) {
+    commandLine 'protractor.cmd', "$rootDir/deploy/conf.js"
+}
+
+task submit(dependsOn: [tasks.srcZip, tasks.generateOutputs]) {}
+tasks.generateOutputs.mustRunAfter(tasks.srcZip)
+tasks.runProtractor.mustRunAfter(tasks.generateOutputs)
