@@ -6,9 +6,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class Ride implements Comparable<Ride> {
 
-  private static int nextId = 0;
-
-  private final int id;
+  private long id;
 
   private int earliestStart;
 
@@ -22,12 +20,12 @@ public class Ride implements Comparable<Ride> {
 
   private long importance = -1;
 
-  public Ride() {
-    this.id = nextId++;
+  public long getId() {
+    return id;
   }
 
-  public int getId() {
-    return id;
+  public void setId(long id) {
+    this.id = id;
   }
 
   public int getEarliestStart() {

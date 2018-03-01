@@ -1,7 +1,6 @@
 package org.luxons.hashcode.model;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Map.Entry;
@@ -53,6 +52,9 @@ public class Problem implements Solvable {
 
   public void setRides(List<Ride> rides) {
     this.rides = rides;
+    for (int i = 0; i < rides.size(); i++) {
+      rides.get(i).setId(i);
+    }
   }
 
   private PriorityQueue<Ride> computeQueue() {
